@@ -6,7 +6,18 @@ export type Player = {
     apellido_paterno: string;
     apellido_materno: string;
     categoria: string;
-    fecha_nacimiento: Date;
+    fecha_nacimiento: string;
     años_registro: number;
-    foto: File;
+    foto: File | null;
 };
+
+export type PlayerInputForm = Pick<
+    Player,
+    | "curp"
+    | "nombre"
+    | "apellido_paterno"
+    | "apellido_materno"
+    | "categoria"
+    | "fecha_nacimiento"
+    | "foto"
+>;

@@ -10,14 +10,73 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import PersonIcon from "@mui/icons-material/Person";
+import { useForm } from "react-hook-form";
+import { PlayerInputForm } from "../types";
+import { usePlayer } from "../hooks/usePlayer";
+import { ChangeEvent } from "react";
 
 export default function FormPlayer() {
+    const { playerData, setPlayerData } = usePlayer();
+
+    const initialValues: PlayerInputForm = {
+        curp: "",
+        nombre: "",
+        apellido_paterno: "",
+        apellido_materno: "",
+        categoria: "",
+        fecha_nacimiento: "",
+        foto: null,
+    };
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        setValue,
+        setError,
+        watch,
+    } = useForm<PlayerInputForm>({
+        defaultValues: initialValues,
+    });
+
+    // Función para manejar el cambio en el archivo (foto)
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setValue("foto", file); // Asignar el archivo al estado
+        } else {
+            setValue("foto", null); // Si no hay archivo, se establece como null
+            setError("foto", { type: "manual", message: "La foto es obligatoria" });
+        }
+    };
+
+    // Validación al enviar el formulario
+    const onSubmit = (data: PlayerInputForm) => {
+        if (!data.foto) {
+            setError("foto", { type: "manual", message: "La foto es obligatoria" });
+            return; // Evitar el envío si no hay foto
+        }
+
+        setPlayerData({
+            ...playerData,
+            ...data,
+            foto: data.foto,
+        });
+        console.log(playerData);
+        reset();
+    };
+
+    // Comprobar si todos los campos están completos
+    const isFormValid = Object.values(watch()).every((value) => value !== "" && value !== null);
+
     return (
         <Box
             component="form"
             autoComplete="false"
             noValidate
-            className="py-5 px-11 sm:px-16 rounded-xl shadow-xl bg-white bg-gradient-to-b from-[#ffffff]/85 to-[#92da97]/15  "
+            className="py-5 px-11 sm:px-16 rounded-xl shadow-xl bg-white bg-gradient-to-b from-[#ffffff]/85 to-[#92da97]/15"
+            onSubmit={handleSubmit(onSubmit)}
         >
             <h1 className="font-roboto text-center mb-5 text-2xl font-extrabold text-gray-800">
                 Formulario de Registro
@@ -27,54 +86,63 @@ export default function FormPlayer() {
                 <TextField
                     id="curp"
                     label="CURP"
+                    type="text"
                     variant="outlined"
-                    helperText="Introduce tu CURP."
                     required
-                    fullWidth
+                    {...register("curp")}
+                    helperText="Introduce tu CURP."
                 />
 
                 <TextField
                     id="nombre"
                     label="Nombre"
+                    type="text"
                     variant="outlined"
-                    helperText="Introduce tu nombre."
                     required
-                    fullWidth
+                    {...register("nombre")}
+                    helperText="Introduce tu nombre."
                 />
 
                 <TextField
                     id="apellido-paterno"
                     label="Apellido Paterno"
+                    type="text"
                     variant="outlined"
-                    helperText="Introduce tu apellido paterno."
                     required
-                    fullWidth
+                    {...register("apellido_paterno")}
+                    helperText="Introduce tu apellido paterno."
                 />
 
                 <TextField
                     id="apellido-materno"
                     label="Apellido Materno"
+                    type="text"
                     variant="outlined"
-                    helperText="Introduce tu apellido materno."
                     required
-                    fullWidth
+                    {...register("apellido_materno")}
+                    helperText="Introduce tu apellido materno."
                 />
 
                 <div className="flex flex-col space-y-6 md:space-y-0 sm:flex-row sm:gap-5">
                     <FormControl className="w-full sm:w-1/2">
-                        <InputLabel id="categoria-label">Categoria *</InputLabel>
+                        <InputLabel id="categoria-label" error={!!errors.categoria}>
+                            Categoria *
+                        </InputLabel>
                         <Select
                             labelId="categoria-label"
                             id="categoria"
                             label="Categoria"
-                            required
-                            fullWidth
+                            value={watch("categoria") || ""}
+                            {...register("categoria")}
                         >
-                            <MenuItem value={10}>Master</MenuItem>
-                            <MenuItem value={20}>Golden</MenuItem>
-                            <MenuItem value={30}>Diamante</MenuItem>
+                            <MenuItem value="" disabled>
+                                Selecciona una categoría
+                            </MenuItem>
+                            <MenuItem value="1">Master</MenuItem>
+                            <MenuItem value="2">Golden</MenuItem>
+                            <MenuItem value="3">Diamante</MenuItem>
                         </Select>
-                        <FormHelperText>Selecciona la categoria.</FormHelperText>
+                        <FormHelperText>Selecciona tu categoria.</FormHelperText>
                     </FormControl>
 
                     <TextField
@@ -82,37 +150,40 @@ export default function FormPlayer() {
                         label="Fecha de nacimiento"
                         type="date"
                         variant="outlined"
-                        required
-                        helperText="Selecciona tu fecha de nacimiento."
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        fullWidth
+                        {...register("fecha_nacimiento")}
+                        helperText="Introduce tu fecha de nacimiento."
                     />
                 </div>
 
-                <div className="flex justify-between">
-                    <label htmlFor="subir-foto">
-                        <Button
-                            variant="contained"
-                            color="inherit"
-                            component="span"
-                            endIcon={<PersonIcon />}
-                        >
-                            Foto
-                        </Button>
-                    </label>
-                    <input id="subir-foto" type="file" className="hidden" accept="image/*" />
+                {/* Botón para seleccionar la foto */}
+                <Button
+                    variant="outlined"
+                    component="label"
+                    color="primary"
+                    startIcon={<PersonIcon />}
+                >
+                    Selecciona tu foto
+                    <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleFileChange}
+                        required
+                    />
+                </Button>
 
-                    <Button
-                        variant="contained"
-                        color="success"
-                        type="submit"
-                        endIcon={<SendIcon />}
-                    >
-                        Registrar
-                    </Button>
-                </div>
+                <Button
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                    endIcon={<SendIcon />}
+                    disabled={!isFormValid} // Deshabilitar si algún campo está vacío
+                >
+                    Registrar
+                </Button>
             </div>
         </Box>
     );

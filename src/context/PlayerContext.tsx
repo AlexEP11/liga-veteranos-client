@@ -21,9 +21,9 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         apellido_paterno: "",
         apellido_materno: "",
         categoria: "",
-        fecha_nacimiento: new Date(),
+        fecha_nacimiento: "",
         años_registro: 0,
-        foto: new File([], ""),
+        foto: null,
     });
 
     return (
