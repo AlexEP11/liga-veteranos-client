@@ -24,6 +24,7 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         fecha_nacimiento: "",
         años_registro: 0,
         foto: null,
+        ine: null,
     });
 
     return (

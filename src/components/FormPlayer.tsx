@@ -9,12 +9,12 @@ import {
     FormHelperText,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import PersonIcon from "@mui/icons-material/Person";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
 import { PlayerInputForm } from "../types";
 import { usePlayer } from "../hooks/usePlayer";
-import { ChangeEvent } from "react";
-
+import { ChangeEvent, useEffect } from "react";
 export default function FormPlayer() {
     const { playerData, setPlayerData } = usePlayer();
 
@@ -26,49 +26,42 @@ export default function FormPlayer() {
         categoria: "",
         fecha_nacimiento: "",
         foto: null,
+        ine: null,
     };
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-        setValue,
-        setError,
-        watch,
-    } = useForm<PlayerInputForm>({
+    const { register, handleSubmit, reset, setValue, watch } = useForm<PlayerInputForm>({
         defaultValues: initialValues,
     });
 
-    // Función para manejar el cambio en el archivo (foto)
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const formValues = watch(); // Observar valores del formulario
+
+    useEffect(() => {
+        setPlayerData({
+            ...playerData,
+            ...formValues, // Agrega los valores actuales del formulario
+            foto: formValues.foto || null,
+        });
+    }, [formValues, setPlayerData]);
+
+    const handlePhotoFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            setValue("foto", file); // Asignar el archivo al estado
-        } else {
-            setValue("foto", null); // Si no hay archivo, se establece como null
-            setError("foto", { type: "manual", message: "La foto es obligatoria" });
+            setValue("foto", file);
+        }
+    };
+    const handleINEFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setValue("ine", file);
         }
     };
 
-    // Validación al enviar el formulario
     const onSubmit = (data: PlayerInputForm) => {
-        if (!data.foto) {
-            setError("foto", { type: "manual", message: "La foto es obligatoria" });
-            return; // Evitar el envío si no hay foto
-        }
-
-        setPlayerData({
-            ...playerData,
-            ...data,
-            foto: data.foto,
-        });
-        console.log(playerData);
+        console.log("Datos enviados:", data);
         reset();
     };
 
-    // Comprobar si todos los campos están completos
-    const isFormValid = Object.values(watch()).every((value) => value !== "" && value !== null);
+    const isFormValid = Object.values(formValues).every((value) => value !== "" && value !== null);
 
     return (
         <Box
@@ -101,6 +94,9 @@ export default function FormPlayer() {
                     required
                     {...register("nombre")}
                     helperText="Introduce tu nombre."
+                    inputProps={{
+                        maxLength: 20,
+                    }}
                 />
 
                 <TextField
@@ -111,6 +107,9 @@ export default function FormPlayer() {
                     required
                     {...register("apellido_paterno")}
                     helperText="Introduce tu apellido paterno."
+                    inputProps={{
+                        maxLength: 20,
+                    }}
                 />
 
                 <TextField
@@ -121,13 +120,14 @@ export default function FormPlayer() {
                     required
                     {...register("apellido_materno")}
                     helperText="Introduce tu apellido materno."
+                    inputProps={{
+                        maxLength: 20,
+                    }}
                 />
 
                 <div className="flex flex-col space-y-6 md:space-y-0 sm:flex-row sm:gap-5">
                     <FormControl className="w-full sm:w-1/2">
-                        <InputLabel id="categoria-label" error={!!errors.categoria}>
-                            Categoria *
-                        </InputLabel>
+                        <InputLabel id="categoria-label">Categoria *</InputLabel>
                         <Select
                             labelId="categoria-label"
                             id="categoria"
@@ -158,19 +158,33 @@ export default function FormPlayer() {
                     />
                 </div>
 
-                {/* Botón para seleccionar la foto */}
                 <Button
                     variant="outlined"
                     component="label"
                     color="primary"
-                    startIcon={<PersonIcon />}
+                    startIcon={<InsertPhotoIcon />}
                 >
                     Selecciona tu foto
                     <input
                         type="file"
                         accept="image/*"
                         hidden
-                        onChange={handleFileChange}
+                        onChange={handlePhotoFileChange}
+                        required
+                    />
+                </Button>
+                <Button
+                    variant="outlined"
+                    component="label"
+                    color="secondary"
+                    startIcon={<BadgeIcon />}
+                >
+                    Selecciona tu INE
+                    <input
+                        type="file"
+                        accept="application/pdf"
+                        hidden
+                        onChange={handleINEFileChange}
                         required
                     />
                 </Button>
@@ -180,7 +194,7 @@ export default function FormPlayer() {
                     color="success"
                     type="submit"
                     endIcon={<SendIcon />}
-                    disabled={!isFormValid} // Deshabilitar si algún campo está vacío
+                    disabled={!isFormValid}
                 >
                     Registrar
                 </Button>

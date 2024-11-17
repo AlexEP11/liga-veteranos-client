@@ -9,6 +9,7 @@ export type Player = {
     fecha_nacimiento: string;
     años_registro: number;
     foto: File | null;
+    ine: File | null;
 };
 
 export type PlayerInputForm = Pick<
@@ -20,4 +21,5 @@ export type PlayerInputForm = Pick<
     | "categoria"
     | "fecha_nacimiento"
     | "foto"
+    | "ine"
 >;

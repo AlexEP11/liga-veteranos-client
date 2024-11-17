@@ -4,14 +4,13 @@ import { calcularEdad } from "../utils";
 
 export default function CardPlayer() {
     const { playerData } = usePlayer();
-    console.log(new Date(playerData.fecha_nacimiento).getUTCFullYear());
     return (
         <div className="flex-col items-center ">
             <h2 className="font-roboto text-center font-bold text-xl">
                 Previsualización de Credencial
             </h2>
             <Box
-                className={`p-5  rounded-md shadow-lg border-4 ${
+                className={`p-5 rounded-md shadow-lg border-4 ${
                     playerData.categoria === "1"
                         ? "border-green-600"
                         : playerData.categoria === "2"
@@ -26,13 +25,17 @@ export default function CardPlayer() {
                     backgroundImage: `url('/fondo-tarjeta.png')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    position: "relative", // Para el posicionamiento de las firmas
+                    overflow: "hidden", // Para evitar que los elementos se desborden
+                    display: "flex", // Usamos flexbox para el contenido
+                    flexDirection: "column", // Alineamos los elementos de arriba a abajo
                 }}
             >
                 <h3 className="uppercase text-xs text-center font-bold mb-1">
                     Liga de Veteranos Independientes de Ciudad Guzman
                 </h3>
                 <p className="uppercase text-xs text-center font-bold">
-                    Cerrtifica el equipo: {playerData.equipo ? playerData.equipo : "???"}
+                    Certifica el equipo: {playerData.equipo ? playerData.equipo : "???"}
                 </p>
 
                 <p className="uppercase text-xs text-left font-bold mb-2">
@@ -41,7 +44,7 @@ export default function CardPlayer() {
 
                 <div className="flex gap-2">
                     {playerData.foto ? (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col" style={{ flexShrink: 0 }}>
                             <img
                                 src={URL.createObjectURL(playerData.foto)}
                                 alt="Foto de previsualización"
@@ -57,7 +60,8 @@ export default function CardPlayer() {
                                 style={{
                                     width: "160px",
                                     height: "185px",
-                                    objectFit: "cover",
+                                    objectFit: "cover", // Esto asegura que la imagen no se deforme
+                                    flexShrink: 0, // Esto asegura que la imagen no se reduzca
                                 }}
                             />
                             <p className="uppercase text-xs text-center mt-[47px] font-bold ">
@@ -65,7 +69,7 @@ export default function CardPlayer() {
                             </p>
                         </div>
                     ) : (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col" style={{ flexShrink: 0 }}>
                             <img
                                 src="/foto-default.jpg"
                                 alt="Foto de previsualización"
@@ -81,7 +85,8 @@ export default function CardPlayer() {
                                 style={{
                                     width: "160px",
                                     height: "185px",
-                                    objectFit: "cover",
+                                    objectFit: "cover", // Esto asegura que la imagen no se deforme
+                                    flexShrink: 0, // Esto asegura que la imagen no se reduzca
                                 }}
                             />
                             <p className="uppercase text-xs text-center mt-[47px] font-bold ">
@@ -90,8 +95,8 @@ export default function CardPlayer() {
                         </div>
                     )}
 
-                    <div>
-                        <p className="uppercase text-xs text-left font-bold mb-2">
+                    <div style={{ flexGrow: 1 }}>
+                        <p className="uppercase text-xs text-left font-bold mb-2 break-words">
                             Registra al jugador:{" "}
                             {`${playerData.nombre} ${playerData.apellido_paterno} ${playerData.apellido_materno}`}
                         </p>
@@ -133,27 +138,27 @@ export default function CardPlayer() {
                         </p>
 
                         <div className="flex flex-col justify-center text-center relative">
-                            <div className="flex justify-around mt-10">
-                                <p className="uppercase text-xs text-left font-bold mb-2">
-                                    Presidente Equipo
-                                </p>
-                                <p className="uppercase text-xs text-left font-bold mb-2">
-                                    Secretario Equipo
-                                </p>
-                            </div>
-
+                            {/* Firmas fijas y sin movimiento */}
                             <img
                                 src="/firma-presidente.png"
                                 alt=""
-                                className="absolute  -bottom-2 left-3 h-24 w-32 z-10"
+                                className="absolute left-5 bottom-0 h-16 w-32 z-10"
                             />
 
                             <img
                                 src="/firma-secretario.png"
                                 alt=""
-                                className="absolute  -bottom-1 right-0 h-20 w-40 z-10"
+                                className="absolute right-8 bottom-1 h-14 w-28 z-10"
                             />
 
+                            <div className="flex justify-around mt-10">
+                                <p className="uppercase text-xs text-left font-bold">
+                                    Presidente Equipo
+                                </p>
+                                <p className="uppercase text-xs text-left font-bold">
+                                    Secretario Equipo
+                                </p>
+                            </div>
                             <div className="flex justify-around mt-10">
                                 <p className="uppercase text-xs text-left font-bold">
                                     Presidente Liga
