@@ -9,6 +9,7 @@ import {
     FormHelperText,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
@@ -27,6 +28,7 @@ export default function FormPlayer() {
         fecha_nacimiento: "",
         foto: null,
         ine: null,
+        curpFile: null,
     };
 
     const { register, handleSubmit, reset, setValue, watch } = useForm<PlayerInputForm>({
@@ -43,12 +45,13 @@ export default function FormPlayer() {
         });
     }, [formValues, setPlayerData]);
 
-    const handlePhotoFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleCURPFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            setValue("foto", file);
+            setValue("curpFile", file);
         }
     };
+
     const handleINEFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -56,6 +59,12 @@ export default function FormPlayer() {
         }
     };
 
+    const handlePhotoFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setValue("foto", file);
+        }
+    };
     const onSubmit = (data: PlayerInputForm) => {
         console.log("Datos enviados:", data);
         reset();
@@ -68,7 +77,7 @@ export default function FormPlayer() {
             component="form"
             autoComplete="false"
             noValidate
-            className="py-5 px-11 sm:px-16 rounded-xl shadow-xl bg-white bg-gradient-to-b from-[#ffffff]/85 to-[#92da97]/15"
+            className="py-5 px-16 sm:px-16 rounded-xl shadow-xl bg-white bg-gradient-to-b from-[#ffffff]/85 to-[#92da97]/15"
             onSubmit={handleSubmit(onSubmit)}
         >
             <h1 className="font-roboto text-center mb-5 text-2xl font-extrabold text-gray-800">
@@ -76,6 +85,53 @@ export default function FormPlayer() {
             </h1>
 
             <div className="flex flex-col space-y-5">
+                <Button
+                    variant="outlined"
+                    component="label"
+                    color="error"
+                    startIcon={<PictureAsPdfIcon />}
+                >
+                    Selecciona tu CURP
+                    <input
+                        type="file"
+                        accept="application/pdf"
+                        hidden
+                        onChange={handleCURPFileChange}
+                        required
+                    />
+                </Button>
+                <Button
+                    variant="outlined"
+                    component="label"
+                    color="secondary"
+                    startIcon={<BadgeIcon />}
+                >
+                    Selecciona tu INE
+                    <input
+                        type="file"
+                        accept="application/pdf"
+                        hidden
+                        onChange={handleINEFileChange}
+                        required
+                        className="text-center"
+                    />
+                </Button>
+                <Button
+                    variant="outlined"
+                    component="label"
+                    color="primary"
+                    startIcon={<InsertPhotoIcon />}
+                >
+                    Selecciona tu foto
+                    <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handlePhotoFileChange}
+                        required
+                    />
+                </Button>
+
                 <TextField
                     id="curp"
                     label="CURP"
@@ -157,37 +213,6 @@ export default function FormPlayer() {
                         helperText="Introduce tu fecha de nacimiento."
                     />
                 </div>
-
-                <Button
-                    variant="outlined"
-                    component="label"
-                    color="primary"
-                    startIcon={<InsertPhotoIcon />}
-                >
-                    Selecciona tu foto
-                    <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handlePhotoFileChange}
-                        required
-                    />
-                </Button>
-                <Button
-                    variant="outlined"
-                    component="label"
-                    color="secondary"
-                    startIcon={<BadgeIcon />}
-                >
-                    Selecciona tu INE
-                    <input
-                        type="file"
-                        accept="application/pdf"
-                        hidden
-                        onChange={handleINEFileChange}
-                        required
-                    />
-                </Button>
 
                 <Button
                     variant="contained"

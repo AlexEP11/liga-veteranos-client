@@ -25,6 +25,7 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         años_registro: 0,
         foto: null,
         ine: null,
+        curpFile: null,
     });
 
     return (

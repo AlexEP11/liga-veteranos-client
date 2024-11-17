@@ -10,6 +10,7 @@ export type Player = {
     años_registro: number;
     foto: File | null;
     ine: File | null;
+    curpFile: File | null;
 };
 
 export type PlayerInputForm = Pick<
@@ -22,4 +23,5 @@ export type PlayerInputForm = Pick<
     | "fecha_nacimiento"
     | "foto"
     | "ine"
+    | "curpFile"
 >;

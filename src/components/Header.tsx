@@ -31,31 +31,29 @@ export default function Header() {
                 </div>
             </header>
 
-            <Box className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+            <Box className="md:hidden fixed top-0 left-0 right-0 z-50">
                 <BottomNavigation
                     showLabels
                     sx={{
-                        background: "white",
+                        background:
+                            "linear-gradient(to bottom, #c4eccc 30%, #c8eccc 30%, #ffffff 100%)",
                         "& .MuiBottomNavigationAction-root": {
                             color: "#000000",
                         },
                     }}
                 >
-                    {/* Registrar con enlace */}
                     <BottomNavigationAction
                         label="Registrar"
                         icon={<HowToRegIcon />}
                         component={Link}
                         to="/"
                     />
-                    {/* Historial con enlace */}
                     <BottomNavigationAction
                         label="Historial"
                         icon={<RestoreIcon />}
                         component={Link}
                         to="/historial-registros"
                     />
-                    {/* Perfil con enlace */}
                     <BottomNavigationAction
                         icon={
                             <Avatar
