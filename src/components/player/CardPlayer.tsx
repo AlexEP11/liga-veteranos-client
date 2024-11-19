@@ -1,9 +1,11 @@
 import { Box } from "@mui/material";
-import { usePlayer } from "../hooks/usePlayer";
-import { calcularEdad } from "../utils";
+import { usePlayer } from "../../hooks/usePlayer";
+import { calcularEdad } from "../../utils";
+import { useDarkMode } from "../../hooks/useDarkMode";
 
 export default function CardPlayer() {
     const { playerData } = usePlayer();
+    const { darkMode } = useDarkMode();
 
     const borderColors: Record<"1" | "2" | "3", string> = {
         "1": "border-[#30b480]", // Verde
@@ -15,7 +17,11 @@ export default function CardPlayer() {
 
     return (
         <div className="flex-col items-center">
-            <h2 className="font-roboto text-center mb-5 font-bold text-xl">
+            <h2
+                className={`font-roboto text-center mb-5 font-bold text-xl ${
+                    darkMode ? "text-white" : "text-black"
+                }`}
+            >
                 Previsualización de Credencial
             </h2>
             <Box

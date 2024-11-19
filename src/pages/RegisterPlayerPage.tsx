@@ -1,7 +1,7 @@
 import { Zoom } from "@mui/material";
 import { useEffect, useState } from "react";
-import CardPlayer from "../components/CardPlayer";
-import FormPlayer from "../components/FormPlayer";
+import CardPlayer from "../components/player/CardPlayer";
+import FormPlayer from "../components/player/FormPlayer";
 import "@fontsource/roboto/400.css";
 export default function RegisterPlayerPage() {
     const [mounted, setMounted] = useState(false);

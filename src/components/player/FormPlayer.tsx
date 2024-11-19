@@ -13,11 +13,15 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
-import { PlayerInputForm } from "../types";
-import { usePlayer } from "../hooks/usePlayer";
+import { Player, PlayerInputForm } from "../../types";
+import { usePlayer } from "../../hooks/usePlayer";
 import { ChangeEvent, useEffect } from "react";
+import { useDarkMode } from "../../hooks/useDarkMode";
+import { inputStyles } from "./styles";
+
 export default function FormPlayer() {
     const { playerData, setPlayerData } = usePlayer();
+    const { darkMode } = useDarkMode();
 
     const initialValues: PlayerInputForm = {
         curp: "",
@@ -40,31 +44,20 @@ export default function FormPlayer() {
     useEffect(() => {
         setPlayerData({
             ...playerData,
-            ...formValues, // Agrega los valores actuales del formulario
+            ...formValues,
             foto: formValues.foto || null,
-        });
+        } as Player);
     }, [formValues, setPlayerData]);
 
-    const handleCURPFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setValue("curpFile", file);
-        }
-    };
+    // Función genérica para manejar cambios de archivos
+    const handleFileChange =
+        (field: keyof PlayerInputForm) => (event: ChangeEvent<HTMLInputElement>) => {
+            const file = event.target.files?.[0];
+            if (file) {
+                setValue(field, file);
+            }
+        };
 
-    const handleINEFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setValue("ine", file);
-        }
-    };
-
-    const handlePhotoFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setValue("foto", file);
-        }
-    };
     const onSubmit = (data: PlayerInputForm) => {
         console.log("Datos enviados:", data);
         reset();
@@ -75,12 +68,14 @@ export default function FormPlayer() {
     return (
         <Box
             component="form"
-            autoComplete="false"
+            autoComplete="off"
             noValidate
-            className="py-5 px-16 sm:px-16 rounded-xl shadow-xl bg-white bg-gradient-to-b from-[#ffffff]/85 to-[#92da97]/15"
+            className={`py-5 px-16 sm:px-16 rounded-xl shadow-xl transition-colors duration-300 ${
+                darkMode ? "bg-dark_mode_secondary text-white" : "bg-white text-black"
+            }`}
             onSubmit={handleSubmit(onSubmit)}
         >
-            <h1 className="font-roboto text-center mb-5 text-2xl font-extrabold text-gray-800">
+            <h1 className="font-roboto text-center mb-5 text-2xl font-extrabold">
                 Formulario de Registro
             </h1>
 
@@ -96,7 +91,7 @@ export default function FormPlayer() {
                         type="file"
                         accept="application/pdf"
                         hidden
-                        onChange={handleCURPFileChange}
+                        onChange={handleFileChange("curpFile")}
                         required
                     />
                 </Button>
@@ -111,7 +106,7 @@ export default function FormPlayer() {
                         type="file"
                         accept="application/pdf"
                         hidden
-                        onChange={handleINEFileChange}
+                        onChange={handleFileChange("ine")}
                         required
                         className="text-center"
                     />
@@ -127,7 +122,7 @@ export default function FormPlayer() {
                         type="file"
                         accept="image/*"
                         hidden
-                        onChange={handlePhotoFileChange}
+                        onChange={handleFileChange("foto")}
                         required
                     />
                 </Button>
@@ -140,6 +135,7 @@ export default function FormPlayer() {
                     required
                     {...register("curp")}
                     helperText="Introduce tu CURP."
+                    sx={inputStyles(darkMode)}
                 />
 
                 <TextField
@@ -153,6 +149,7 @@ export default function FormPlayer() {
                     inputProps={{
                         maxLength: 20,
                     }}
+                    sx={inputStyles(darkMode)}
                 />
 
                 <TextField
@@ -166,6 +163,7 @@ export default function FormPlayer() {
                     inputProps={{
                         maxLength: 20,
                     }}
+                    sx={inputStyles(darkMode)}
                 />
 
                 <TextField
@@ -179,17 +177,24 @@ export default function FormPlayer() {
                     inputProps={{
                         maxLength: 20,
                     }}
+                    sx={inputStyles(darkMode)}
                 />
 
                 <div className="flex flex-col space-y-6 md:space-y-0 sm:flex-row sm:gap-5">
                     <FormControl className="w-full sm:w-1/2">
-                        <InputLabel id="categoria-label">Categoria *</InputLabel>
+                        <InputLabel
+                            id="categoria-label"
+                            sx={{ color: darkMode ? "white" : "black" }}
+                        >
+                            Categoria *
+                        </InputLabel>
                         <Select
                             labelId="categoria-label"
                             id="categoria"
                             label="Categoria"
                             value={watch("categoria") || ""}
                             {...register("categoria")}
+                            sx={inputStyles(darkMode)}
                         >
                             <MenuItem value="" disabled>
                                 Selecciona una categoría
@@ -198,7 +203,9 @@ export default function FormPlayer() {
                             <MenuItem value="2">Golden</MenuItem>
                             <MenuItem value="3">Diamante</MenuItem>
                         </Select>
-                        <FormHelperText>Selecciona tu categoria.</FormHelperText>
+                        <FormHelperText sx={{ color: darkMode ? "white" : "black" }}>
+                            Selecciona tu categoria.
+                        </FormHelperText>
                     </FormControl>
 
                     <TextField
@@ -211,6 +218,7 @@ export default function FormPlayer() {
                         }}
                         {...register("fecha_nacimiento")}
                         helperText="Introduce tu fecha de nacimiento."
+                        sx={inputStyles(darkMode)}
                     />
                 </div>
 
@@ -220,6 +228,7 @@ export default function FormPlayer() {
                     type="submit"
                     endIcon={<SendIcon />}
                     disabled={!isFormValid}
+                    sx={{ ":disabled": { backgroundColor: "#e8e4e4" } }}
                 >
                     Registrar
                 </Button>

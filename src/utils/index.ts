@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useDarkMode } from "../hooks/useDarkMode";
+
 export function calcularEdad(fechaNacimiento: string) {
     const fechaNac = new Date(fechaNacimiento);
     const fechaActual = new Date();
@@ -16,4 +19,25 @@ export function calcularEdad(fechaNacimiento: string) {
     }
 
     return edad;
+}
+
+export function DarkModeTheme() {
+    const { darkMode } = useDarkMode();
+
+    useEffect(() => {
+        const body = document.body;
+
+        if (darkMode) {
+            body.classList.add("bg-dark_mode_primary", "transition-colors", "duration-300");
+        } else {
+            body.classList.remove("bg-dark_mode_primary");
+        }
+
+        // Cleanup opcional (útil si el componente se desmonta)
+        return () => {
+            body.classList.remove("bg-dark_mode_primary");
+        };
+    }, [darkMode]);
+
+    return null; // No renderiza nada visible
 }
