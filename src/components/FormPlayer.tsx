@@ -86,7 +86,7 @@ export default function FormPlayer() {
 
             <div className="flex flex-col space-y-5">
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     component="label"
                     color="error"
                     startIcon={<PictureAsPdfIcon />}
@@ -101,7 +101,7 @@ export default function FormPlayer() {
                     />
                 </Button>
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     component="label"
                     color="secondary"
                     startIcon={<BadgeIcon />}
@@ -117,7 +117,7 @@ export default function FormPlayer() {
                     />
                 </Button>
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     component="label"
                     color="primary"
                     startIcon={<InsertPhotoIcon />}

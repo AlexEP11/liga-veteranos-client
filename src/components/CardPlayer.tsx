@@ -4,31 +4,32 @@ import { calcularEdad } from "../utils";
 
 export default function CardPlayer() {
     const { playerData } = usePlayer();
+
+    const borderColors: Record<"1" | "2" | "3", string> = {
+        "1": "border-[#30b480]", // Verde
+        "2": "border-[#1c74d4]", // Azul
+        "3": "border-[#c42c2c]", // Rojo
+    };
+
+    const borderColor = borderColors[playerData.categoria as "1" | "2" | "3"] || "border-black";
+
     return (
-        <div className="flex-col items-center ">
-            <h2 className="font-roboto text-center font-bold text-xl">
+        <div className="flex-col items-center">
+            <h2 className="font-roboto text-center mb-5 font-bold text-xl">
                 Previsualización de Credencial
             </h2>
             <Box
-                className={`p-5 rounded-md shadow-lg border-4 ${
-                    playerData.categoria === "1"
-                        ? "border-green-600"
-                        : playerData.categoria === "2"
-                        ? "border-blue-600"
-                        : playerData.categoria === "3"
-                        ? "border-red-600"
-                        : "border-black"
-                } p`}
+                className={`p-5 rounded-2xl shadow-md shadow-black/50 border-4 ${borderColor}`}
                 style={{
                     width: "550px",
                     height: "360px",
                     backgroundImage: `url('/fondo-tarjeta.png')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    position: "relative", // Para el posicionamiento de las firmas
-                    overflow: "hidden", // Para evitar que los elementos se desborden
-                    display: "flex", // Usamos flexbox para el contenido
-                    flexDirection: "column", // Alineamos los elementos de arriba a abajo
+                    position: "relative",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
                 }}
             >
                 <h3 className="uppercase text-xs text-center font-bold mb-1">
@@ -43,57 +44,24 @@ export default function CardPlayer() {
                 </p>
 
                 <div className="flex gap-2">
-                    {playerData.foto ? (
-                        <div className="flex flex-col" style={{ flexShrink: 0 }}>
-                            <img
-                                src={URL.createObjectURL(playerData.foto)}
-                                alt="Foto de previsualización"
-                                className={`rounded-3xl border-4 ${
-                                    playerData.categoria === "1"
-                                        ? "border-green-600"
-                                        : playerData.categoria === "2"
-                                        ? "border-blue-600"
-                                        : playerData.categoria === "3"
-                                        ? "border-red-600"
-                                        : "border-black"
-                                }`}
-                                style={{
-                                    width: "160px",
-                                    height: "185px",
-                                    objectFit: "cover", // Esto asegura que la imagen no se deforme
-                                    flexShrink: 0, // Esto asegura que la imagen no se reduzca
-                                }}
-                            />
-                            <p className="uppercase text-xs text-center mt-[47px] font-bold ">
-                                Firma Jugador
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="flex flex-col" style={{ flexShrink: 0 }}>
-                            <img
-                                src="/foto-default.jpg"
-                                alt="Foto de previsualización"
-                                className={`rounded-3xl border-4 ${
-                                    playerData.categoria === "1"
-                                        ? "border-green-800"
-                                        : playerData.categoria === "2"
-                                        ? "border-blue-800"
-                                        : playerData.categoria === "3"
-                                        ? "border-red-800"
-                                        : "border-black"
-                                }`}
-                                style={{
-                                    width: "160px",
-                                    height: "185px",
-                                    objectFit: "cover", // Esto asegura que la imagen no se deforme
-                                    flexShrink: 0, // Esto asegura que la imagen no se reduzca
-                                }}
-                            />
-                            <p className="uppercase text-xs text-center mt-[47px] font-bold ">
-                                Firma Jugador
-                            </p>
-                        </div>
-                    )}
+                    <div className="flex flex-col gap-10 " style={{ flexShrink: 0 }}>
+                        <img
+                            src={
+                                playerData.foto
+                                    ? URL.createObjectURL(playerData.foto)
+                                    : "/foto-default.png"
+                            }
+                            alt="Foto de previsualización"
+                            className={`rounded-3xl border-4 ${borderColor}`}
+                            style={{
+                                width: "160px",
+                                height: "185px",
+                                objectFit: "cover",
+                                flexShrink: 0,
+                            }}
+                        />
+                        <p className="uppercase text-xs text-center font-bold ">Firma Jugador</p>
+                    </div>
 
                     <div style={{ flexGrow: 1 }}>
                         <p className="uppercase text-xs text-left font-bold mb-2 break-words">
@@ -101,7 +69,7 @@ export default function CardPlayer() {
                             {`${playerData.nombre} ${playerData.apellido_paterno} ${playerData.apellido_materno}`}
                         </p>
 
-                        <div className="flex text-center justify-center items-center gap-5 mb-6">
+                        <div className="flex text-center justify-start items-center gap-5 mb-6">
                             <p className="uppercase text-xs text-left font-bold flex flex-col">
                                 Temporada:{" "}
                                 <span className="justify-center items-center flex">
@@ -138,7 +106,6 @@ export default function CardPlayer() {
                         </p>
 
                         <div className="flex flex-col justify-center text-center relative">
-                            {/* Firmas fijas y sin movimiento */}
                             <img
                                 src="/firma-presidente.png"
                                 alt=""

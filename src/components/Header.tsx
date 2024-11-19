@@ -1,28 +1,77 @@
-import { Avatar, BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Drawer,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Divider,
+    IconButton,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import HistoryIcon from "@mui/icons-material/History";
 import { Link } from "react-router-dom";
-import RestoreIcon from "@mui/icons-material/Restore";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
+import { useState } from "react";
+import { usePlayer } from "../hooks/usePlayer";
 
 export default function Header() {
+    const { playerData } = usePlayer();
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    const toggleDrawer = (open: boolean) => () => {
+        setOpenDrawer(open);
+    };
+
+    const drawerList = (
+        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="/">
+                        <ListItemIcon>
+                            <Avatar
+                                sx={{ bgcolor: "black", color: "white", width: 35, height: 35 }}
+                            >
+                                AV
+                            </Avatar>
+                        </ListItemIcon>
+                        <ListItemText primary={playerData.equipo || "Equipo Desconocido"} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="/">
+                        <ListItemIcon>
+                            <GroupAddIcon sx={{ color: "black" }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Registrar" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="/historial-registros">
+                        <ListItemIcon>
+                            <HistoryIcon sx={{ color: "black" }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Historial de Registros" />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </Box>
+    );
+
     return (
         <>
-            <header className="hidden md:flex justify-between p-5 mb-5 items-center px-10 bg-gradient-to-b to-[#ffffff]/100 via-[#c8eccc]/50 from-[#c4eccc]/100">
-                <div className="flex gap-10 font-roboto font-semibold text-lg">
-                    <Link
-                        to="/"
-                        className="relative transition-all duration-300 ease-in-out hover:scale-110 hover:text-[#517a63]"
-                    >
-                        <span className="after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-[#517a63] after:transition-all after:duration-300 after:hover:w-full">
-                            Registrar
-                        </span>
+            <header className="hidden md:flex justify-between p-5 mb-5 items-center px-10 ">
+                <div className="flex gap-10 font-roboto font-semibold text-lg transition-all">
+                    <Link to="/" className="hover:scale-105 duration-300">
+                        Registrar
                     </Link>
-                    <Link
-                        to="/historial-registros"
-                        className="relative transition-all duration-300 ease-in-out hover:scale-110 hover:text-[#517a63]"
-                    >
-                        <span className="after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-[#517a63] after:transition-all after:duration-300 after:hover:w-full">
-                            Historial de Registros
-                        </span>
+                    <Link to="/historial-registros" className="hover:scale-105 duration-300">
+                        Historial de Registros
                     </Link>
                 </div>
                 <div className="flex gap-5 items-center">
@@ -31,41 +80,13 @@ export default function Header() {
                 </div>
             </header>
 
-            <Box className="md:hidden fixed top-0 left-0 right-0 z-50">
-                <BottomNavigation
-                    showLabels
-                    sx={{
-                        background:
-                            "linear-gradient(to bottom, #c4eccc 30%, #c8eccc 30%, #ffffff 100%)",
-                        "& .MuiBottomNavigationAction-root": {
-                            color: "#000000",
-                        },
-                    }}
-                >
-                    <BottomNavigationAction
-                        label="Registrar"
-                        icon={<HowToRegIcon />}
-                        component={Link}
-                        to="/"
-                    />
-                    <BottomNavigationAction
-                        label="Historial"
-                        icon={<RestoreIcon />}
-                        component={Link}
-                        to="/historial-registros"
-                    />
-                    <BottomNavigationAction
-                        icon={
-                            <Avatar
-                                sx={{ bgcolor: "black", color: "white", width: 32, height: 32 }}
-                            >
-                                AV
-                            </Avatar>
-                        }
-                        component={Link}
-                        to="/perfil"
-                    />
-                </BottomNavigation>
+            <Box className="md:hidden">
+                <IconButton onClick={toggleDrawer(true)} sx={{ color: "#000000" }}>
+                    <MenuIcon fontSize="large" />
+                </IconButton>
+                <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
+                    {drawerList}
+                </Drawer>
             </Box>
         </>
     );
