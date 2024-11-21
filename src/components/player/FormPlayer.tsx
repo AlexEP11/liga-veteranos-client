@@ -13,11 +13,14 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { useForm } from "react-hook-form";
-import { Player, PlayerInputForm } from "../../types";
+import { Player, PlayerInputForm, PlayerResponse } from "../../types";
 import { usePlayer } from "../../hooks/usePlayer";
 import { ChangeEvent, useEffect } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { inputStyles } from "./styles";
+import { useMutation } from "@tanstack/react-query";
+import { uploadPDF } from "../../api/player/PlayerAPI";
+import { toast } from "react-toastify";
 
 export default function FormPlayer() {
     const { playerData, setPlayerData } = usePlayer();
@@ -28,7 +31,7 @@ export default function FormPlayer() {
         nombre: "",
         apellido_paterno: "",
         apellido_materno: "",
-        categoria: "",
+        categoria: 0,
         fecha_nacimiento: "",
         foto: null,
         ine: null,
@@ -41,6 +44,18 @@ export default function FormPlayer() {
 
     const formValues = watch(); // Observar valores del formulario
 
+    // Función genérica para manejar cambios de archivos
+    const handleFileChange =
+        (field: keyof PlayerInputForm) => (event: ChangeEvent<HTMLInputElement>) => {
+            const file = event.target.files?.[0];
+            if (file) {
+                setValue(field, file);
+                if (field === "curpFile") {
+                    mutate(file!);
+                }
+            }
+        };
+
     useEffect(() => {
         setPlayerData({
             ...playerData,
@@ -49,14 +64,18 @@ export default function FormPlayer() {
         } as Player);
     }, [formValues, setPlayerData]);
 
-    // Función genérica para manejar cambios de archivos
-    const handleFileChange =
-        (field: keyof PlayerInputForm) => (event: ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files?.[0];
-            if (file) {
-                setValue(field, file);
-            }
-        };
+    const { mutate, data: curpData } = useMutation<PlayerResponse, Error, File>({
+        mutationFn: uploadPDF,
+        onSuccess: (data: PlayerResponse) => {
+            toast.success(data.message);
+            console.log(data);
+            setValue("curp", data.curp);
+            setValue("nombre", data.nombre);
+            setValue("apellido_paterno", data.apellido_paterno);
+            setValue("apellido_materno", data.apellido_materno);
+            setValue("fecha_nacimiento", data.fecha_nacimiento);
+        },
+    });
 
     const onSubmit = (data: PlayerInputForm) => {
         console.log("Datos enviados:", data);
@@ -86,7 +105,7 @@ export default function FormPlayer() {
                     color="error"
                     startIcon={<PictureAsPdfIcon />}
                 >
-                    Selecciona tu CURP
+                    {formValues.curpFile ? formValues.curpFile.name : "Selecciona tu CURP"}
                     <input
                         type="file"
                         accept="application/pdf"
@@ -101,7 +120,7 @@ export default function FormPlayer() {
                     color="secondary"
                     startIcon={<BadgeIcon />}
                 >
-                    Selecciona tu INE
+                    {formValues.ine ? formValues.ine.name : "Selecciona tu INE"}
                     <input
                         type="file"
                         accept="application/pdf"
@@ -117,7 +136,8 @@ export default function FormPlayer() {
                     color="primary"
                     startIcon={<InsertPhotoIcon />}
                 >
-                    Selecciona tu foto
+                    {formValues.foto ? formValues.foto.name : "Selecciona tu foto"}
+
                     <input
                         type="file"
                         accept="image/*"
@@ -133,9 +153,12 @@ export default function FormPlayer() {
                     type="text"
                     variant="outlined"
                     required
+                    disabled
                     {...register("curp")}
-                    helperText="Introduce tu CURP."
                     sx={inputStyles(darkMode)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
 
                 <TextField
@@ -144,12 +167,15 @@ export default function FormPlayer() {
                     type="text"
                     variant="outlined"
                     required
+                    disabled
+                    sx={inputStyles(darkMode)}
                     {...register("nombre")}
-                    helperText="Introduce tu nombre."
                     inputProps={{
                         maxLength: 20,
                     }}
-                    sx={inputStyles(darkMode)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
 
                 <TextField
@@ -158,12 +184,15 @@ export default function FormPlayer() {
                     type="text"
                     variant="outlined"
                     required
+                    disabled
                     {...register("apellido_paterno")}
-                    helperText="Introduce tu apellido paterno."
+                    sx={inputStyles(darkMode)}
                     inputProps={{
                         maxLength: 20,
                     }}
-                    sx={inputStyles(darkMode)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
 
                 <TextField
@@ -172,12 +201,15 @@ export default function FormPlayer() {
                     type="text"
                     variant="outlined"
                     required
+                    disabled
                     {...register("apellido_materno")}
-                    helperText="Introduce tu apellido materno."
+                    sx={inputStyles(darkMode)}
                     inputProps={{
                         maxLength: 20,
                     }}
-                    sx={inputStyles(darkMode)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
 
                 <div className="flex flex-col space-y-6 md:space-y-0 sm:flex-row sm:gap-5">
@@ -199,9 +231,14 @@ export default function FormPlayer() {
                             <MenuItem value="" disabled>
                                 Selecciona una categoría
                             </MenuItem>
-                            <MenuItem value="1">Master</MenuItem>
-                            <MenuItem value="2">Golden</MenuItem>
-                            <MenuItem value="3">Diamante</MenuItem>
+                            {curpData?.categoria.map((categoria) => (
+                                <MenuItem
+                                    key={categoria.id_categoria}
+                                    value={categoria.id_categoria}
+                                >
+                                    {categoria.nombre}
+                                </MenuItem>
+                            ))}
                         </Select>
                         <FormHelperText sx={{ color: darkMode ? "white" : "black" }}>
                             Selecciona tu categoria.
@@ -211,14 +248,14 @@ export default function FormPlayer() {
                     <TextField
                         id="fecha-nacimiento"
                         label="Fecha de nacimiento"
-                        type="date"
                         variant="outlined"
+                        required
+                        disabled
+                        {...register("fecha_nacimiento")}
+                        sx={inputStyles(darkMode)}
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        {...register("fecha_nacimiento")}
-                        helperText="Introduce tu fecha de nacimiento."
-                        sx={inputStyles(darkMode)}
                     />
                 </div>
 

@@ -10,15 +10,23 @@ export const inputStyles = (darkMode: boolean) => ({
         borderColor: darkMode ? "white !important" : undefined, // Borde blanco cuando está enfocado
     },
     "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: darkMode ? "white" : undefined, // Borde del contorno
+        borderColor: darkMode ? "#13171c" : undefined, // Borde del contorno
     },
-    "& .MuiFormHelperText-root": {
-        color: darkMode ? "white" : undefined, // Texto de ayuda
-    },
+
     "& .MuiSelect-icon": {
         color: darkMode ? "white" : "black", // Color del icono desplegable
     },
-    "& .MuiSelect-select.MuiSelect-select": {
-        color: darkMode ? "white" : "black", // Color del texto seleccionado en el Select
+
+    // Para campos deshabilitados
+    "& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-input": {
+        color: darkMode ? "rgba(255, 255, 255, 0.5) !important" : "rgba(0, 0, 0, 0.38) !important", // Usa !important
+        WebkitTextFillColor: darkMode
+            ? "rgba(255, 255, 255, 0.5) !important"
+            : "rgba(0, 0, 0, 0.38) !important", // Cambié kebab-case a camelCase
+    },
+    "& .MuiOutlinedInput-root.Mui-disabled": {
+        borderColor: darkMode
+            ? "rgba(255, 255, 255, 0.5) !important"
+            : "rgba(0, 0, 0, 0.23) !important",
     },
 });
