@@ -19,7 +19,7 @@ import { ChangeEvent, useEffect } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { inputStyles } from "./styles";
 import { useMutation } from "@tanstack/react-query";
-import { uploadPDF } from "../../api/player/PlayerAPI";
+import { registerPlayer, uploadPDF } from "../../api/player/PlayerAPI";
 import { toast } from "react-toastify";
 
 export default function FormPlayer() {
@@ -27,11 +27,12 @@ export default function FormPlayer() {
     const { darkMode } = useDarkMode();
 
     const initialValues: PlayerInputForm = {
+        equipo: 1,
         curp: "",
         nombre: "",
         apellido_paterno: "",
         apellido_materno: "",
-        categoria: 0,
+        categoria: "",
         fecha_nacimiento: "",
         foto: null,
         ine: null,
@@ -51,7 +52,7 @@ export default function FormPlayer() {
             if (file) {
                 setValue(field, file);
                 if (field === "curpFile") {
-                    mutate(file!);
+                    PDF({ file, equipo: playerData.equipo }); // Ahora pasas un objeto
                 }
             }
         };
@@ -64,11 +65,14 @@ export default function FormPlayer() {
         } as Player);
     }, [formValues, setPlayerData]);
 
-    const { mutate, data: curpData } = useMutation<PlayerResponse, Error, File>({
+    const { mutate: PDF, data: curpData } = useMutation<
+        PlayerResponse,
+        Error,
+        { file: File; equipo: Player["equipo"] }
+    >({
         mutationFn: uploadPDF,
         onSuccess: (data: PlayerResponse) => {
             toast.success(data.message);
-            console.log(data);
             setValue("curp", data.curp);
             setValue("nombre", data.nombre);
             setValue("apellido_paterno", data.apellido_paterno);
@@ -77,8 +81,18 @@ export default function FormPlayer() {
         },
     });
 
+    const { mutate: createPlayer } = useMutation({
+        mutationFn: registerPlayer,
+        onSuccess: (data) => {
+            toast.success(data.message);
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
+
     const onSubmit = (data: PlayerInputForm) => {
-        console.log("Datos enviados:", data);
+        createPlayer(data);
         reset();
     };
 
@@ -228,9 +242,6 @@ export default function FormPlayer() {
                             {...register("categoria")}
                             sx={inputStyles(darkMode)}
                         >
-                            <MenuItem value="" disabled>
-                                Selecciona una categoría
-                            </MenuItem>
                             {curpData?.categoria.map((categoria) => (
                                 <MenuItem
                                     key={categoria.id_categoria}

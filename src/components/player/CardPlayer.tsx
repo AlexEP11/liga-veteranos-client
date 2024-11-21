@@ -7,26 +7,26 @@ export default function CardPlayer() {
     const { playerData } = usePlayer();
     const { darkMode } = useDarkMode();
 
-    const borderColors: Record<1 | 2 | 3, string> = {
-        1: "border-[#30b480]", // Verde
-        2: "border-[#1c74d4]", // Azul
-        3: "border-[#c42c2c]", // Rojo
+    const borderColors: Record<"1" | "2" | "3", string> = {
+        "1": "border-[#30b480]", // Verde
+        "2": "border-[#1c74d4]", // Azul
+        "3": "border-[#c42c2c]", // Rojo
     };
 
     const categories = () => {
         switch (playerData.categoria) {
-            case 1:
+            case "1":
                 return "Master";
-            case 2:
+            case "2":
                 return "Golden";
-            case 3:
+            case "3":
                 return "Diamante";
             default:
                 return "???";
         }
     };
 
-    const borderColor = borderColors[playerData.categoria as 1 | 2 | 3] || "border-black";
+    const borderColor = borderColors[playerData.categoria as "1" | "2" | "3"] || "border-black";
 
     return (
         <div className="flex-col items-center">

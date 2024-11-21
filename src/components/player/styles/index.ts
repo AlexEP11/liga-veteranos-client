@@ -1,4 +1,9 @@
 export const inputStyles = (darkMode: boolean) => ({
+    "& .MuiSelect-select": {
+        color: darkMode ? "white" : "black", // Texto del select
+        backgroundColor: darkMode ? "#13171c" : undefined, // Fondo del select
+    },
+
     "& .MuiInputLabel-root": {
         color: darkMode ? "white" : undefined, // Etiqueta en color blanco en darkMode
     },

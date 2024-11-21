@@ -1,11 +1,11 @@
 export type Player = {
-    equipo: string;
+    equipo: number;
     carnet: string;
     curp: string;
     nombre: string;
     apellido_paterno: string;
     apellido_materno: string;
-    categoria: number;
+    categoria: string;
     fecha_nacimiento: string;
     años_registro: number;
     foto: File | null;
@@ -13,18 +13,7 @@ export type Player = {
     curpFile: File | null;
 };
 
-export type PlayerInputForm = Pick<
-    Player,
-    | "curp"
-    | "nombre"
-    | "apellido_paterno"
-    | "apellido_materno"
-    | "categoria"
-    | "fecha_nacimiento"
-    | "foto"
-    | "ine"
-    | "curpFile"
->;
+export type PlayerInputForm = Omit<Player, "carnet" | "años_registro">;
 
 export type PlayerResponse = {
     curp: string;
