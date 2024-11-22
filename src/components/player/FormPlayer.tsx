@@ -23,7 +23,7 @@ import { registerPlayer, uploadPDF } from "../../api/player/PlayerAPI";
 import { toast } from "react-toastify";
 
 export default function FormPlayer() {
-    const { playerData, setPlayerData } = usePlayer();
+    const { playerData, setPlayerData, initialValuesPlayer } = usePlayer();
     const { darkMode } = useDarkMode();
 
     const initialValues: PlayerInputForm = {
@@ -57,19 +57,11 @@ export default function FormPlayer() {
             }
         };
 
-    useEffect(() => {
-        setPlayerData({
-            ...playerData,
-            ...formValues,
-            foto: formValues.foto || null,
-        } as Player);
-    }, [formValues, setPlayerData]);
-
-    const { mutate: PDF, data: curpData } = useMutation<
-        PlayerResponse,
-        Error,
-        { file: File; equipo: Player["equipo"] }
-    >({
+    const {
+        mutate: PDF,
+        data: curpData,
+        reset: resetPDF,
+    } = useMutation<PlayerResponse, Error, { file: File; equipo: Player["equipo"] }>({
         mutationFn: uploadPDF,
         onSuccess: (data: PlayerResponse) => {
             toast.success(data.message);
@@ -80,6 +72,19 @@ export default function FormPlayer() {
             setValue("fecha_nacimiento", data.fecha_nacimiento);
         },
     });
+
+    useEffect(() => {
+        setPlayerData({
+            ...playerData,
+            ...formValues,
+            carnet: curpData
+                ? curpData.abreviatura +
+                  playerData.categoria +
+                  String(curpData?.numero_jugadores).padStart(3, "0")
+                : "???",
+            foto: formValues.foto || null,
+        });
+    }, [formValues, setPlayerData]);
 
     const { mutate: createPlayer } = useMutation({
         mutationFn: registerPlayer,
@@ -93,7 +98,9 @@ export default function FormPlayer() {
 
     const onSubmit = (data: PlayerInputForm) => {
         createPlayer(data);
+        resetPDF();
         reset();
+        setPlayerData({ ...initialValuesPlayer });
     };
 
     const isFormValid = Object.values(formValues).every((value) => value !== "" && value !== null);

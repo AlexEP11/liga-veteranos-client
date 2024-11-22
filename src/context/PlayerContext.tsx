@@ -8,13 +8,14 @@ type PlayerProviderProps = {
 type PlayerContextType = {
     playerData: Player;
     setPlayerData: (data: Player) => void;
+    initialValuesPlayer: Player;
 };
 
 export const PlayerContext = createContext<PlayerContextType>(null!);
 
 export const PlayerProvider = ({ children }: PlayerProviderProps) => {
-    const [playerData, setPlayerData] = useState<Player>({
-        equipo: "",
+    const initialValuesPlayer: Player = {
+        equipo: 0,
         carnet: "",
         curp: "",
         nombre: "",
@@ -26,10 +27,11 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         foto: null,
         ine: null,
         curpFile: null,
-    });
+    };
+    const [playerData, setPlayerData] = useState<Player>(initialValuesPlayer);
 
     return (
-        <PlayerContext.Provider value={{ playerData, setPlayerData }}>
+        <PlayerContext.Provider value={{ playerData, setPlayerData, initialValuesPlayer }}>
             {children}
         </PlayerContext.Provider>
     );

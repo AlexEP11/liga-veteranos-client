@@ -16,6 +16,7 @@ export type Player = {
 export type PlayerInputForm = Omit<Player, "carnet" | "años_registro">;
 
 export type PlayerResponse = {
+    abreviatura: string;
     curp: string;
     nombre: string;
     apellido_paterno: string;
@@ -23,4 +24,5 @@ export type PlayerResponse = {
     categoria: Array<{ id_categoria: number; nombre: string; edad_minima: number }>;
     fecha_nacimiento: string;
     message: string;
+    numero_jugadores: number;
 };

@@ -14,7 +14,7 @@ export default function CardPlayer() {
     };
 
     const categories = () => {
-        switch (playerData.categoria) {
+        switch (playerData.categoria.toString()) {
             case "1":
                 return "Master";
             case "2":
