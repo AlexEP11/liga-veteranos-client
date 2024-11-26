@@ -33,4 +33,7 @@ export const inputStyles = (darkMode: boolean) => ({
             ? "rgba(255, 255, 255, 0.5) !important"
             : "rgba(0, 0, 0, 0.23) !important",
     },
+    "& .MuiInputLabel-root.Mui-disabled": {
+        color: darkMode ? "rgba(255, 255, 255, .8) !important" : "rgba(0, 0, 0, .8) !important",
+    },
 });

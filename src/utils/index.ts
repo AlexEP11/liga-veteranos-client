@@ -22,7 +22,27 @@ export function calcularEdad(fechaNacimiento: string) {
 }
 
 export function DarkModeTheme() {
-    const { darkMode } = useDarkMode();
+    const { darkMode, setDarkMode } = useDarkMode();
+
+    useEffect(() => {
+        // Detect system preference for dark mode
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        // Set initial dark mode based on system preference
+        mediaQuery.matches && setDarkMode(true);
+
+        // Update darkMode when system preference changes
+        const handleChange = (event: MediaQueryListEvent) => {
+            setDarkMode(event.matches);
+        };
+
+        mediaQuery.addEventListener("change", handleChange);
+
+        // Cleanup listener when the component unmounts
+        return () => {
+            mediaQuery.removeEventListener("change", handleChange);
+        };
+    }, [setDarkMode]);
 
     useEffect(() => {
         const body = document.body;
