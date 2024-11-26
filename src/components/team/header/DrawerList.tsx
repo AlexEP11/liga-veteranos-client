@@ -1,13 +1,4 @@
-import {
-    Avatar,
-    Box,
-    Divider,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-} from "@mui/material";
+import { Avatar, Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HistoryIcon from "@mui/icons-material/History";
 import { Link } from "react-router-dom";
@@ -61,10 +52,7 @@ export default function DrawerList({ playerData, toggleDrawer }: DrawerListProps
                         <ListItemIcon>
                             <GroupAddIcon sx={{ color: darkMode ? "white" : "black" }} />{" "}
                         </ListItemIcon>
-                        <ListItemText
-                            primary="Registrar"
-                            sx={{ color: darkMode ? "white" : "black" }}
-                        />
+                        <ListItemText primary="Registrar" sx={{ color: darkMode ? "white" : "black" }} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -72,10 +60,7 @@ export default function DrawerList({ playerData, toggleDrawer }: DrawerListProps
                         <ListItemIcon>
                             <HistoryIcon sx={{ color: darkMode ? "white" : "black" }} />{" "}
                         </ListItemIcon>
-                        <ListItemText
-                            primary="Historial de Registros"
-                            sx={{ color: darkMode ? "white" : "black" }}
-                        />
+                        <ListItemText primary="Historial de Registros" sx={{ color: darkMode ? "white" : "black" }} />
                     </ListItemButton>
                 </ListItem>
             </List>
