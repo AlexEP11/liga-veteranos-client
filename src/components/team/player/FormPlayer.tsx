@@ -106,7 +106,7 @@ export default function FormPlayer() {
             component="form"
             autoComplete="off"
             noValidate
-            className={`py-5 px-16 sm:px-16 rounded-xl shadow-xl transition-colors duration-300 ${
+            className={`py-10 px-16  rounded-xl shadow-xl transition-colors duration-300 ${
                 darkMode ? "bg-dark_mode_secondary text-white" : "bg-white text-black"
             }`}
             onSubmit={handleSubmit(onSubmit)}
@@ -115,7 +115,7 @@ export default function FormPlayer() {
                 Formulario de Registro
             </h1>
 
-            <div className="flex flex-col space-y-5">
+            <div className="flex flex-col space-y-5 sm:w-80 text-center">
                 <Button
                     variant="contained"
                     component="label"
@@ -187,9 +187,6 @@ export default function FormPlayer() {
                     disabled
                     sx={inputStyles(darkMode)}
                     {...register("nombre")}
-                    inputProps={{
-                        maxLength: 20,
-                    }}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -204,9 +201,6 @@ export default function FormPlayer() {
                     disabled
                     {...register("apellido_paterno")}
                     sx={inputStyles(darkMode)}
-                    inputProps={{
-                        maxLength: 20,
-                    }}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -221,9 +215,6 @@ export default function FormPlayer() {
                     disabled
                     {...register("apellido_materno")}
                     sx={inputStyles(darkMode)}
-                    inputProps={{
-                        maxLength: 20,
-                    }}
                     InputLabelProps={{
                         shrink: true,
                     }}
