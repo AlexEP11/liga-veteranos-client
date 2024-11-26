@@ -8,6 +8,9 @@ export default function Router() {
         <>
             <BrowserRouter>
                 <Routes>
+                    {/* <Route element={<AppLayout />}>
+                        <Route element={<LoginPage />} path="/" />
+                    </Route> */}
                     <Route element={<AppLayout />}>
                         <Route element={<RegisterPlayerPage />} index path="/" />
                         <Route element={<LogHistoryPage />} path="/historial-registros" />

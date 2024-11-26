@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import BackGround from "../components/Background";
-import Header from "../components/header/Header";
+import BackGround from "@/components/Background";
+import Header from "@/components/team/header/Header";
 
 export default function AppLayout() {
     return (

@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
-import { Player, PlayerInputForm } from "../../types";
-import api from "../../lib/axios";
+import { Player, PlayerInputForm } from "@/types";
+import api from "@/lib/axios";
 
 export async function uploadPDF({ file, equipo }: { file: File; equipo: Player["equipo"] }) {
     try {

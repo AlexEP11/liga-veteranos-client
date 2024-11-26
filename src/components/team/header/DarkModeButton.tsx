@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import { useDarkMode } from "../../hooks/useDarkMode";
+import { useDarkMode } from "@/hooks/useDarkMode";
 
 export default function DarkModeButton() {
     const { darkMode, setDarkMode } = useDarkMode();

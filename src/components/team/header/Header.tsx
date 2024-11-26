@@ -2,10 +2,10 @@ import { Avatar, Box, Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { usePlayer } from "../../hooks/usePlayer";
+import { usePlayer } from "@/hooks/usePlayer";
 import DrawerList from "./DrawerList";
 import DarkModeButton from "./DarkModeButton";
-import { useDarkMode } from "../../hooks/useDarkMode";
+import { useDarkMode } from "@/hooks/useDarkMode";
 
 export default function Header() {
     const { playerData } = usePlayer();

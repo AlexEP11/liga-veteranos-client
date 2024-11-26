@@ -1,26 +1,17 @@
-import {
-    Box,
-    TextField,
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    FormHelperText,
-} from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { Player, PlayerInputForm, PlayerResponse } from "@/types";
+import { usePlayer } from "@/hooks/usePlayer";
+import { ChangeEvent, useEffect } from "react";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { inputStyles } from "./styles";
+import { useMutation } from "@tanstack/react-query";
+import { registerPlayer, uploadPDF } from "@/api/player/PlayerAPI";
+import { toast } from "react-toastify";
 import SendIcon from "@mui/icons-material/Send";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import BadgeIcon from "@mui/icons-material/Badge";
-import { useForm } from "react-hook-form";
-import { Player, PlayerInputForm, PlayerResponse } from "../../types";
-import { usePlayer } from "../../hooks/usePlayer";
-import { ChangeEvent, useEffect } from "react";
-import { useDarkMode } from "../../hooks/useDarkMode";
-import { inputStyles } from "./styles";
-import { useMutation } from "@tanstack/react-query";
-import { registerPlayer, uploadPDF } from "../../api/player/PlayerAPI";
-import { toast } from "react-toastify";
 
 export default function FormPlayer() {
     const { playerData, setPlayerData, initialValuesPlayer } = usePlayer();
@@ -32,7 +23,7 @@ export default function FormPlayer() {
         nombre: "",
         apellido_paterno: "",
         apellido_materno: "",
-        categoria: "",
+        categoria: "1", // Poner la categoria del fetch
         fecha_nacimiento: "",
         foto: null,
         ine: null,
@@ -74,7 +65,7 @@ export default function FormPlayer() {
     });
 
     useEffect(() => {
-        setPlayerData({
+        const updatedData = {
             ...playerData,
             ...formValues,
             carnet: curpData
@@ -83,8 +74,13 @@ export default function FormPlayer() {
                   String(curpData?.numero_jugadores).padStart(3, "0")
                 : "???",
             foto: formValues.foto || null,
-        });
-    }, [formValues, setPlayerData]);
+        };
+
+        // Solo actualiza el estado si hay cambios
+        if (JSON.stringify(playerData) !== JSON.stringify(updatedData)) {
+            setPlayerData(updatedData);
+        }
+    }, [formValues, curpData, playerData, setPlayerData]);
 
     const { mutate: createPlayer } = useMutation({
         mutationFn: registerPlayer,
@@ -233,49 +229,18 @@ export default function FormPlayer() {
                     }}
                 />
 
-                <div className="flex flex-col space-y-6 md:space-y-0 sm:flex-row sm:gap-5">
-                    <FormControl className="w-full sm:w-1/2">
-                        <InputLabel
-                            id="categoria-label"
-                            sx={{ color: darkMode ? "white" : "black" }}
-                        >
-                            Categoria *
-                        </InputLabel>
-                        <Select
-                            labelId="categoria-label"
-                            id="categoria"
-                            label="Categoria"
-                            value={watch("categoria") || ""}
-                            {...register("categoria")}
-                            sx={inputStyles(darkMode)}
-                        >
-                            {curpData?.categoria.map((categoria) => (
-                                <MenuItem
-                                    key={categoria.id_categoria}
-                                    value={categoria.id_categoria}
-                                >
-                                    {categoria.nombre}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <FormHelperText sx={{ color: darkMode ? "white" : "black" }}>
-                            Selecciona tu categoria.
-                        </FormHelperText>
-                    </FormControl>
-
-                    <TextField
-                        id="fecha-nacimiento"
-                        label="Fecha de nacimiento"
-                        variant="outlined"
-                        required
-                        disabled
-                        {...register("fecha_nacimiento")}
-                        sx={inputStyles(darkMode)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
+                <TextField
+                    id="fecha-nacimiento"
+                    label="Fecha de nacimiento"
+                    variant="outlined"
+                    required
+                    disabled
+                    {...register("fecha_nacimiento")}
+                    sx={inputStyles(darkMode)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
 
                 <Button
                     variant="contained"

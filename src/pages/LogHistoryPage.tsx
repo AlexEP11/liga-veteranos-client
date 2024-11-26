@@ -1,7 +1,6 @@
 import { Slide } from "@mui/material";
 import { useDarkMode } from "../hooks/useDarkMode";
 import { useEffect, useState } from "react";
-import TableLogHistory from "../components/log-history/TableLogHistory";
 
 export default function LogHistoryPage() {
     const { darkMode } = useDarkMode();
@@ -24,9 +23,7 @@ export default function LogHistoryPage() {
                 </h1>
             </Slide>
             <Slide direction="left" in={mounted} timeout={2000}>
-                <section>
-                    <TableLogHistory />
-                </section>
+                <section>{/* <TableLogHistory /> */}</section>
             </Slide>
         </main>
     );

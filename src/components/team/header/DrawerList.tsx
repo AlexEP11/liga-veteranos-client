@@ -11,10 +11,10 @@ import {
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HistoryIcon from "@mui/icons-material/History";
 import { Link } from "react-router-dom";
-import { useDarkMode } from "../../hooks/useDarkMode";
+import { useDarkMode } from "@/hooks/useDarkMode";
 
 type DrawerListProps = {
-    playerData: { equipo: string };
+    playerData: { equipo: number };
     toggleDrawer: (open: boolean) => () => void;
 };
 

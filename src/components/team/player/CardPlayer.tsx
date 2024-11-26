@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { usePlayer } from "../../hooks/usePlayer";
-import { calcularEdad } from "../../utils";
-import { useDarkMode } from "../../hooks/useDarkMode";
+import { usePlayer } from "@/hooks/usePlayer";
+import { calcularEdad } from "@/utils";
+import { useDarkMode } from "@/hooks/useDarkMode";
 
 export default function CardPlayer() {
     const { playerData } = usePlayer();
